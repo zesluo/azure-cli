@@ -261,12 +261,18 @@ def load_command_table(self, _):
         g.wait_command('wait')
 
     with self.command_group('vm', compute_vm_sdk) as g:
+        from azure.cli.core.commands.progress import InfiniteProgressBar
         g.custom_command('identity assign', 'assign_vm_identity', validator=process_assign_identity_namespace)
         g.custom_command('identity remove', 'remove_vm_identity', validator=process_remove_identity_namespace, min_api='2017-12-01')
         g.custom_show_command('identity show', 'show_vm_identity')
 
         g.custom_command('capture', 'capture_vm')
-        g.custom_command('create', 'create_vm', transform=transform_vm_create_output, supports_no_wait=True, table_transformer=deployment_validate_table_format, validator=process_vm_create_namespace, exception_handler=handle_template_based_exception)
+        g.custom_command('create', 'create_vm',
+                         transform=transform_vm_create_output, supports_no_wait=True,
+                         table_transformer=deployment_validate_table_format,
+                         validator=process_vm_create_namespace,
+                         exception_handler=handle_template_based_exception,
+                         progress=InfiniteProgressBar(self.cli_ctx))
         g.command('convert', 'begin_convert_to_managed_disks', min_api='2016-04-30-preview')
         g.command('deallocate', 'begin_deallocate', supports_no_wait=True)
         g.command('delete', 'begin_delete', confirmation=True, supports_no_wait=True)
