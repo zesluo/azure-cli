@@ -3,6 +3,13 @@
 Release History
 ===============
 
+2.22.0
+++++++
+
+**ACR**
+
+* Output a trace in `az acr login` for self-diagnosing potential docker command latency (#17115)
+
 2.21.0
 ++++++
 

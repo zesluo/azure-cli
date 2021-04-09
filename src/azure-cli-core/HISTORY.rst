@@ -3,6 +3,10 @@
 Release History
 ===============
 
+2.22.0
+++++++
+* No changes
+
 2.21.0
 ++++++
 * Unify ADAL and MSAL error handler (#17072)
