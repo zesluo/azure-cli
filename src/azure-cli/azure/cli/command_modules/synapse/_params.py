@@ -654,6 +654,24 @@ def load_arguments(self, _):
         c.argument('workspace_name', arg_type=workspace_name_arg_type)
         c.argument('data_flow_name', arg_type=name_type, help='The data flow name.')
 
+    # synapse artifacts spark job definition
+    for scope in ['create', 'update']:
+        with self.argument_context('synapse spark-job-definition ' + scope) as c:
+            c.argument('workspace_name', arg_type=workspace_name_arg_type)
+            c.argument('spark_job_definition_name', arg_type=name_type, help='The spark job definition name.')
+            c.argument('definition_file', arg_type=definition_file_arg_type)
+
+    with self.argument_context('synapse spark-job-definition list') as c:
+        c.argument('workspace_name', arg_type=workspace_name_arg_type)
+
+    with self.argument_context('synapse spark-job-definition show') as c:
+        c.argument('workspace_name', arg_type=workspace_name_arg_type)
+        c.argument('spark_job_definition_name', arg_type=name_type, help='The spark job definition name.')
+
+    with self.argument_context('synapse spark-job-definition delete') as c:
+        c.argument('workspace_name', arg_type=workspace_name_arg_type)
+        c.argument('spark_job_definition_name', arg_type=name_type, help='The spark job definition name.')
+
     # synapse artifacts notebook
     for scope in ['create', 'set', 'import']:
         with self.argument_context('synapse notebook ' + scope) as c:

@@ -480,3 +480,12 @@ def load_command_table(self, _):
 
     with self.command_group('synapse', is_preview=True):
         pass
+
+    # Data Plane Commands --Artifacts spark job definition operations
+    with self.command_group('synapse spark-job-definition', synapse_data_flow_sdk,
+                            custom_command_type=get_custom_sdk('artifacts', None)) as g:
+        g.custom_command('create', 'create_or_update_spark_job_definition', supports_no_wait=True)
+        g.custom_command('update', 'create_or_update_spark_job_definition', supports_no_wait=True)
+        g.custom_command('list', 'list_spark_job_definitions')
+        g.custom_show_command('show', 'get_spark_job_definition')
+        g.custom_command('delete', 'delete_spark_job_definition', confirmation=True, supports_no_wait=True)

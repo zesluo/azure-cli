@@ -8,11 +8,12 @@ import logging
 import os
 from azure.synapse.artifacts.models import (LinkedService, Dataset, PipelineResource, RunFilterParameters,
                                             Trigger, DataFlow, BigDataPoolReference, NotebookSessionProperties,
-                                            NotebookResource)
+                                            NotebookResource, SparkJobProperties)
 from azure.cli.core.util import sdk_no_wait, CLIError
 from .._client_factory import (cf_synapse_linked_service, cf_synapse_dataset, cf_synapse_pipeline,
                                cf_synapse_pipeline_run, cf_synapse_trigger, cf_synapse_trigger_run,
-                               cf_synapse_data_flow, cf_synapse_notebook, cf_synapse_spark_pool)
+                               cf_synapse_data_flow, cf_synapse_notebook, cf_synapse_spark_pool,
+                               cf_synapse_spark_job_definition)
 from ..constant import EXECUTOR_SIZE, SPARK_SERVICE_ENDPOINT_API_VERSION
 
 
@@ -344,3 +345,36 @@ def write_to_file(notebook, path):
 def delete_notebook(cmd, workspace_name, notebook_name, no_wait=False):
     client = cf_synapse_notebook(cmd.cli_ctx, workspace_name)
     return sdk_no_wait(no_wait, client.begin_delete_notebook, notebook_name, polling=True)
+
+
+def create_or_update_spark_job_definition(cmd, workspace_name, definition_file, spark_job_definition_name,
+                                          executor_size="Small", executor_count=2, no_wait=False):
+    client = cf_synapse_spark_job_definition(cmd.cli_ctx, workspace_name)
+    options = {}
+
+    options['cores'] = EXECUTOR_SIZE[executor_size]['Cores']
+    options['memory'] = EXECUTOR_SIZE[executor_size]['Memory']
+    options['nodeCount'] = executor_count
+    job_properties = SparkJobProperties(file=definition_file,
+                                        driver_memory=options['memory'],
+                                        driver_cores=options['cores'],
+                                        executor_memory=options['memory'],
+                                        executor_cores=options['cores'],
+                                        num_executors=executor_count)
+    return sdk_no_wait(no_wait, client.begin_create_or_update_spark_job_definition,
+                       spark_job_definition_name, job_properties, polling=True)
+
+
+def get_spark_job_definition(cmd, workspace_name, spark_job_definition_name):
+    client = cf_synapse_spark_job_definition(cmd.cli_ctx, workspace_name)
+    return client.get_spark_job_definition(spark_job_definition_name)
+
+
+def list_spark_job_definitions(cmd, workspace_name):
+    client = cf_synapse_spark_job_definition(cmd.cli_ctx, workspace_name)
+    client.get_spark_job_definitions_by_workspace()
+
+
+def delete_spark_job_definition(cmd, workspace_name, spark_job_definition_name, no_wait=False):
+    client = cf_synapse_spark_job_definition(cmd.cli_ctx, workspace_name)
+    return sdk_no_wait(no_wait, client.begin_delete_spark_job_definition, spark_job_definition_name, polling=True)

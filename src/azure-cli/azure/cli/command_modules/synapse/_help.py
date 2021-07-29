@@ -1505,6 +1505,50 @@ examples:
           --name testnotebook
 """
 
+helps['synapse spark-job-definition'] = """
+type: group
+short-summary: Manage Synapse's spark job definition.
+"""
+
+helps['synapse spark-job-definition create'] = """
+type: command
+short-summary: Create a spark-job-definition.
+examples:
+  - name: Create a spark-job-definition.
+    text: |-
+        az synapse spark-job-definition create --workspace-name testsynapseworkspace \\
+          --name sparkjobdefinition --file @path
+"""
+
+helps['synapse spark-job-definition show'] = """
+type: command
+short-summary: Get a spark-job-definition.
+examples:
+  - name: Get a spark-job-definition.
+    text: |-
+        az synapse spark-job-definition show --workspace-name testsynapseworkspace \\
+          --name sparkjobdefinitionname
+"""
+
+helps['synapse spark-job-definition list'] = """
+type: command
+short-summary: List spark job definitions.
+examples:
+  - name: List spark job definition.
+    text: |-
+        az synapse spark-job-definition list --workspace-name testsynapseworkspace
+"""
+
+helps['synapse spark-job-definition delete'] = """
+type: command
+short-summary: Delete a spark job definition.
+examples:
+  - name: Delete a spark job definition.
+    text: |-
+        az synapse spark-job-definition delete --workspace-name testsynapseworkspace \\
+          --name sparkjobdefinitionname
+"""
+
 helps['synapse integration-runtime'] = """
 type: group
 short-summary: Manage Synapse's integration runtimes.
