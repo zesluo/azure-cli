@@ -18,7 +18,7 @@ def create_spark_pool(cmd, client, resource_group_name, workspace_name, spark_po
                       node_size_family=NodeSizeFamily.memory_optimized.value, enable_auto_scale=None,
                       min_node_count=None, max_node_count=None,
                       enable_auto_pause=None, delay=None, spark_events_folder="/events",
-                      library_requirements=None,
+                      library_requirements=None, spark_config_properties=None,
                       spark_log_folder="/logs", tags=None, no_wait=False):
 
     workspace_client = cf_synapse_client_workspace_factory(cmd.cli_ctx)
@@ -40,6 +40,10 @@ def create_spark_pool(cmd, client, resource_group_name, workspace_name, spark_po
         library_requirements_content = read_file_content(library_requirements)
         big_data_pool_info.library_requirements = LibraryRequirements(filename=library_requirements,
                                                                       content=library_requirements_content)
+    if spark_config_properties:
+        spark_config_properties_content = read_file_content(spark_config_properties)
+        big_data_pool_info.spark_config_properties = LibraryRequirements(filename=spark_config_properties,
+                                                                         content=spark_config_properties_content)
     return sdk_no_wait(no_wait, client.begin_create_or_update, resource_group_name, workspace_name, spark_pool_name,
                        big_data_pool_info)
 
